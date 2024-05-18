@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ErrorBox from '../../Reusable/ErrorBox';
 import AirConditionsItem from './AirConditionsItem';
 import Layout from '../../Reusable/Layout';
 
 const TodayWeatherAirConditions = ({ data }) => {
-  const noDataProvided =
-    !data || Object.keys(data).length === 0 || data.cod === '404';
+  const [isValid, setIsValid] = useState(null);
+
+  const noDataProvided = !data || Object.keys(data).length === 0 || data.cod === '404';
 
   let content = <ErrorBox flex="1" type="error" />;
 
-  if (!noDataProvided)
+  if (!noDataProvided) {
+    setIsValid(true);
     content = (
       <>
         <AirConditionsItem
@@ -34,13 +36,23 @@ const TodayWeatherAirConditions = ({ data }) => {
         />
       </>
     );
+  } else {
+    setIsValid(false);
+  }
+
   return (
     <Layout
       title="AIR CONDITIONS"
       content={content}
       mb="1rem"
       sx={{ marginTop: '2.9rem' }}
-    />
+    >
+      {isValid ? (
+        <p>Flood indicator: YES</p>
+      ) : (
+        <p>Flood indicator: NO</p>
+      )}
+    </Layout>
   );
 };
 
